@@ -1,4 +1,3 @@
-
 cd ~
 
 ########
@@ -19,7 +18,7 @@ export POSTGRES_PASSWORD=postgres123
 mkdir -p $GS_TMPDIR
 mkdir -p $GS_DIR
 
-GS_VERSION=2.15.2
+GS_VERSION=2.17.1
 WAR_URL='https://liquidtelecom.dl.sourceforge.net/project/geoserver/GeoServer/'${GS_VERSION}'/geoserver-'${GS_VERSION}'-war.zip'
 PLUGIN_GDAL='https://liquidtelecom.dl.sourceforge.net/project/geoserver/GeoServer/'${GS_VERSION}'/extensions/geoserver-'${GS_VERSION}'-gdal-plugin.zip'
 PLUGIN_VECTOR='https://liquidtelecom.dl.sourceforge.net/project/geoserver/GeoServer/'${GS_VERSION}'/extensions/geoserver-'${GS_VERSION}'-vectortiles-plugin.zip'
@@ -28,23 +27,23 @@ mkdir ~/geoserver-tmp
 cd geoserver-tmp
 
 wget $WAR_URL
-unzip geoserver-*
-unzip geoserver.war -d geoserver-binary
+unzip -q geoserver-*
+unzip -q geoserver.war -d geoserver-binary
 mv ~/naksha-docker/backend/web.xml geoserver-binary/WEB-INF/web.xml
 cd geoserver-binary/WEB-INF/lib
 wget $PLUGIN_GDAL
 wget $PLUGIN_VECTOR
-unzip -o "*.zip"
+unzip -q -o "*.zip"
 rm -rf *.zip
 
 cd ../../
-zip -r ../geoserver.war .
+zip -q -r ../geoserver.war .
 
 mkdir -p ~/tomcat
 cd ~/tomcat
 chmod +x ./bin/*.sh
-wget http://mirrors.estointernet.in/apache/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.zip
-unzip -o "*.zip"
+wget https://archive.apache.org/dist/tomcat/tomcat-8/v8.5.43/bin/apache-tomcat-8.5.43.zip
+unzip -q -o "*.zip"
 mv ~/geoserver-tmp/geoserver.war ./apache-tomcat-8.5.43/webapps
 
 cd ~/naksha
@@ -184,7 +183,7 @@ sed -i 's/__GS_DIR__/'$(echo ${GS_DIR} | sed -e "s#/#\\\/#g")'/g'             $N
 sed -i 's/first.init=false/first.init=true/g'                                 $NAKSHA_CONFIG_PATH
 
 cp $NAKSHA_CONFIG_PATH ~/naksha/src/main/resources/config.properties
-./gradlew war
+# ./gradlew war
 # mv build/libs/naksha.war ~/tomcat/apache-tomcat-8.5.43/webapps
 
 echo "✨ Done ✨"
